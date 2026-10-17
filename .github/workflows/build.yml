@@ -20,7 +20,7 @@ jobs:
       - name: Chạy kiểm tra tự động
         env:
           QT_QPA_PLATFORM: offscreen
-        run: python -m pytest -q
+        run: python -m pytest -q -p no:cacheprovider
 
       - name: Đóng gói ứng dụng
         run: pyinstaller --noconfirm --windowed --name ManageMoho main.py
