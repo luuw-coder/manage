@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manage Moho</title>
+<style>
+:root{
+  --bg:#1b1c20; --bar:#15161a; --panel:#23252b; --btn:#2b2e35; --text:#e8e9ec;
+  --muted:#9a9da6; --accent:#3fb6a8; --gold:#e0a84a; --border:#33353b;
+}
+@media (prefers-color-scheme: light){
+  :root{ --bg:#f5f4f1; --bar:#ffffff; --panel:#ffffff; --btn:#eceae5; --text:#1f1e1c;
+         --muted:#6b6a66; --accent:#1f8f80; --gold:#b97a2a; --border:#e2e0da; }
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:'Segoe UI',system-ui,sans-serif; line-height:1.6;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+header{
+  padding:48px 20px 32px; text-align:center; background:var(--bar); border-bottom:1px solid var(--border);
+}
+header h1{margin:0 0 8px; font-size:clamp(28px,5vw,42px)}
+header p{margin:0; color:var(--muted); font-size:16px}
+.badges{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:16px}
+.badge{background:var(--btn); border-radius:999px; padding:6px 14px; font-size:13px; color:var(--muted)}
+main{max-width:880px; margin:0 auto; padding:32px 20px 64px}
+.card{
+  background:var(--panel); border:1px solid var(--border); border-radius:14px;
+  padding:22px 24px; margin-bottom:18px;
+}
+.card h2{margin:0 0 10px; font-size:19px; display:flex; align-items:center; gap:8px}
+.card p{margin:6px 0; color:var(--muted)}
+ol,ul{margin:10px 0; padding-left:22px}
+li{margin:6px 0}
+code{background:var(--btn); padding:2px 7px; border-radius:6px; font-size:13px}
+.cta{
+  display:inline-block; margin-top:10px; background:var(--accent); color:#06231f;
+  font-weight:600; text-decoration:none; padding:10px 18px; border-radius:9px;
+}
+.cta.gold{background:var(--gold); color:#2a1d05}
+.grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-top:14px}
+.feature{background:var(--btn); border-radius:10px; padding:14px 16px}
+.feature b{display:block; margin-bottom:4px}
+.feature span{color:var(--muted); font-size:13px}
+.note{border-left:3px solid var(--gold); padding:10px 14px; background:var(--btn); border-radius:0 8px 8px 0; color:var(--muted); font-size:14px}
+footer{text-align:center; color:var(--muted); font-size:13px; padding:24px}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Manage Moho</h1>
+  <p>Phần mềm Windows quản lý tài nguyên, chạy song song với Moho Pro</p>
+  <div class="badges">
+    <span class="badge">Windows</span>
+    <span class="badge">Moho 14.3+</span>
+    <span class="badge">Bước 1 / 6</span>
+  </div>
+</header>
+<main>
+
+<div class="card">
+<h2>📦 Tải bộ cài</h2>
+<p>Bộ cài <code>ManageMoho_Setup.exe</code> được tự động đóng gói ở tab <b>Actions</b> mỗi khi có thay đổi.</p>
+<a class="cta" href="../../actions">Mở tab Actions →</a>
+<a class="cta gold" href="#cai-dat">Xem hướng dẫn cài</a>
+</div>
+
+<div class="card">
+<h2>✨ Đang có ở bước 1</h2>
+<div class="grid">
+  <div class="feature"><b>Các mục tùy chỉnh</b><span>Âm thanh, Nhân vật, Ảnh, GIF... và tự thêm mục mới</span></div>
+  <div class="feature"><b>Kéo thả tệp</b><span>Kéo tệp/thư mục vào phần mềm, kéo thẻ ra để đưa sang Moho</span></div>
+  <div class="feature"><b>Luôn nổi &amp; làm mờ</b><span>Ghim trên cùng, tự mờ khi chuột rời cửa sổ</span></div>
+  <div class="feature"><b>Đọc lại an toàn</b><span>Cập nhật tệp mất mà không đụng tệp thật trên ổ đĩa</span></div>
+  <div class="feature"><b>Tìm kiếm &amp; đổi kiểu xem</b><span>Lọc theo tên, chuyển lưới ↔ danh sách</span></div>
+  <div class="feature"><b>Nhớ trạng thái</b><span>Vị trí, kích thước, mục đang mở được lưu lại</span></div>
+</div>
+</div>
+
+<div class="card" id="cai-dat">
+<h2>🚀 Cài đặt</h2>
+<ol>
+<li>Vào tab <b>Actions</b>, mở lượt chạy mới nhất có dấu tick xanh.</li>
+<li>Kéo xuống phần <b>Artifacts</b>, tải <code>ManageMoho-Setup</code> về.</li>
+<li>Giải nén, chạy <code>ManageMoho_Setup.exe</code>.</li>
+<li>Windows có thể báo <i>“Windows protected your PC”</i> — bấm <b>More info → Run anyway</b> (bộ cài chưa có chữ ký số).</li>
+</ol>
+<div class="note">Dữ liệu quản lý lưu ở <code>%APPDATA%\ManageMoho\manage_moho.db</code>. Phần mềm chỉ lưu liên kết tới tệp — không bao giờ xóa, đổi tên hay di chuyển tệp thật trên máy.</div>
+</div>
+
+<div class="card">
+<h2>🗺️ Lộ trình</h2>
+<ol>
+<li>Khung giao diện, mục, tải tệp, luôn nổi, làm mờ — <b>xong</b></li>
+<li>Tối ưu tài nguyên, xem trước ảnh/GIF/video/âm thanh</li>
+<li>Kéo thả tài nguyên trực tiếp sang Moho</li>
+<li>Không gian Kịch bản (soạn thảo, lưu phiên bản)</li>
+<li>Liên kết AI trong Kịch bản</li>
+<li>Cửa sổ Quản lý, sao lưu cài đặt, đóng gói hoàn chỉnh</li>
+</ol>
+</div>
+
+</main>
+<footer>Manage Moho · xem <a href="README.md">README</a> và <a href="CHECKLIST_BUOC1.md">bảng test bước 1</a></footer>
+</body>
+</html>
