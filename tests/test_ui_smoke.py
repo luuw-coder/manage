@@ -15,12 +15,15 @@ from app.main_window import MainWindow  # noqa: E402
 @pytest.fixture()
 def win():
     app = QApplication.instance() or QApplication([])
-    tmp = tempfile.TemporaryDirectory()
-    w = MainWindow(Database(os.path.join(tmp.name, "t.db")))
+    tmp = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)
+    db = Database(os.path.join(tmp.name, "t.db"))
+    w = MainWindow(db)
     w.show()
     w._tmp = tmp
     yield w
     w.close()
+    db.close()
+    app.processEvents()
     tmp.cleanup()
 
 
