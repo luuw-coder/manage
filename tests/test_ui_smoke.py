@@ -87,6 +87,10 @@ def test_category_filter_hides_other_types_but_keeps_folders(win):
     mk(win, "mix/b.png")
     mk(win, "mix/inner/c.txt")
     pick(win, "Âm thanh")
+    # bật bộ lọc "chỉ âm thanh" cho mục này để kiểm tra
+    cid = win.current_cat
+    win.db.update_category(cid, filters="audio")
+    win.rebuild_cats(select=cid)
     folder = os.path.join(win._tmp.name, "data", "mix")
     win.add_roots([folder])
     win.navigate(folder)
