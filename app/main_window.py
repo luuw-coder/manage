@@ -1251,4 +1251,3 @@ class MainWindow(QWidget):
         pos = self.pos()
         self.db.set_setting("geometry2", f"{pos.x()},{pos.y()},{size.width()},{size.height()}")
         super().closeEvent(e)
-
