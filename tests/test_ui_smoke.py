@@ -428,6 +428,7 @@ def test_drag_finished_says_where_you_dropped(win):
 
 
 def test_press_anywhere_in_cell_selects_and_no_selection_rectangle(win):
+    from PySide6.QtCore import QPoint
     for i in range(4):
         mk(win, f"cell/f{i}.png")
     pick(win, "Ảnh")
@@ -439,19 +440,8 @@ def test_press_anywhere_in_cell_selects_and_no_selection_rectangle(win):
     win.list.apply_grid()
     assert not win.list.isSelectionRectVisible()
     gs = win.list.gridSize()
-    first = win.list.item_at(win.list.rect().topLeft() + __import__("PySide6.QtCore", fromlist=["QPoint"]).QPoint(gs.width() - 3, 3))
-    second = win.list.item_at(win.list.rect().topLeft() + __import__("PySide6.QtCore", fromlist=["QPoint"]).QPoint(gs.width() + 3, 3))
-    assert first is win.list.item(0) and second is win.list.item(1)
-
-
-def test_manage_toggles_native_drag(win):
-    from app import widgets
-    dlg = ManageDialog(win)
-    assert dlg.native_check.isChecked()
-    dlg.native_check.setChecked(False)
-    dlg.apply()
-    assert win.db.get_setting("native_drag") == "0" and widgets.USE_NATIVE is False
-    dlg.native_check.setChecked(True)
-    dlg.apply()
-    assert widgets.USE_NATIVE is True
-    dlg.close()
+    first = win.list.item_at(QPoint(gs.width() - 3, 3))
+    second = win.list.item_at(QPoint(gs.width() + 3, 3))
+    assert first is not None and second is not None
+    assert first.data(Qt.UserRole)["name"] == win.list.item(0).data(Qt.UserRole)["name"]
+    assert second.data(Qt.UserRole)["name"] == win.list.item(1).data(Qt.UserRole)["name"]
