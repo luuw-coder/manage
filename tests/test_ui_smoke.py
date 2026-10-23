@@ -439,11 +439,14 @@ def test_press_anywhere_in_cell_selects_and_no_selection_rectangle(win):
     QApplication.processEvents()
     win.list.apply_grid()
     assert not win.list.isSelectionRectVisible()
-    r0 = win.list.visualItemRect(win.list.item(0))
-    r1 = win.list.visualItemRect(win.list.item(1))
-    first = win.list.item_at(QPoint(r0.right() - 3, r0.top() + 3))
-    second = win.list.item_at(QPoint(r1.left() + 3, r1.top() + 3))
-    assert first is win.list.item(0) and second is win.list.item(1)
+    gs = win.list.gridSize()
+    first = win.list.item_at(QPoint(gs.width() - 3, 3))
+    second = win.list.item_at(QPoint(gs.width() + 3, 3))
+    assert first is not None and second is not None
+    # so sánh theo tên tệp: PySide6 tạo lại đối tượng bọc mỗi lần gọi item(), nên không dùng "is"
+    assert first.data(Qt.UserRole)["name"] == win.list.item(0).data(Qt.UserRole)["name"]
+    assert second.data(Qt.UserRole)["name"] == win.list.item(1).data(Qt.UserRole)["name"]
+
 
 def test_manage_toggles_native_drag(win):
     from app import widgets
