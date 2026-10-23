@@ -463,17 +463,32 @@ def test_click_in_empty_part_of_cell_selects_that_card(win):
     from PySide6.QtCore import QPoint
     from PySide6.QtTest import QTest
     _grid_window(win)
-    gs = win.list.gridSize()
     vp = win.list.viewport()
-    QTest.mouseClick(vp, Qt.LeftButton, Qt.NoModifier, QPoint(gs.width() - 3, 3))
-    assert [_name(i) for i in win.list.selectedItems()] == ["f0.png"]
-    QTest.mouseClick(vp, Qt.LeftButton, Qt.NoModifier, QPoint(gs.width() + 3, 3))
-    assert [_name(i) for i in win.list.selectedItems()] == ["f1.png"]
-    QTest.mouseClick(vp, Qt.LeftButton, Qt.ControlModifier, QPoint(3, gs.height() + 3))
-    assert sorted(_name(i) for i in win.list.selectedItems()) == ["f1.png", "f2.png"]
-    QTest.mouseClick(vp, Qt.LeftButton, Qt.NoModifier, QPoint(gs.width() - 3, 3))
+
+    # Đo lưới ngay tại thời điểm click, vì kích thước ô có thể đổi sau mỗi lần chọn
+    def edge_of_col0():
+        gs = win.list.gridSize()
+        return QPoint(gs.width() - 3, 3)
+
+    def just_right_of_col0():
+        gs = win.list.gridSize()
+        return QPoint(gs.width() + 3, 3)
+
+    def start_of_row1():
+        gs = win.list.gridSize()
+        return QPoint(3, gs.height() + 3)
+
+    QTest.mouseClick(vp, Qt.LeftButton, Qt.NoModifier, edge_of_col0())
     assert [_name(i) for i in win.list.selectedItems()] == ["f0.png"]
 
+    QTest.mouseClick(vp, Qt.LeftButton, Qt.NoModifier, just_right_of_col0())
+    assert [_name(i) for i in win.list.selectedItems()] == ["f1.png"]
+
+    QTest.mouseClick(vp, Qt.LeftButton, Qt.ControlModifier, start_of_row1())
+    assert sorted(_name(i) for i in win.list.selectedItems()) == ["f1.png", "f2.png"]
+
+    QTest.mouseClick(vp, Qt.LeftButton, Qt.NoModifier, edge_of_col0())
+    assert [_name(i) for i in win.list.selectedItems()] == ["f0.png"]
 
 def test_manage_toggles_native_drag(win):
     from app import widgets
