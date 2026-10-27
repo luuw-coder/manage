@@ -1,0 +1,1 @@
+/tmp/pytest-of-root/pytest-7/test_bad_hotkey_in_profile0/a.png
