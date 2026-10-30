@@ -14,8 +14,8 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Cài thư viện
-        run: pip install -r requirements.txt pytest pyinstaller lupa
+           - name: Cài thư viện
+        run: pip install -r requirements.txt pytest pyinstaller lupa pillow
 
       - name: Chạy kiểm tra tự động
         env:
