@@ -7,6 +7,16 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - variant: nhe
+            suffix: _Nhe
+            excludes: --exclude-module numpy --exclude-module yaml --exclude-module tkinter --exclude-module PySide6.QtWebEngineCore --exclude-module PySide6.QtWebEngineWidgets --exclude-module PySide6.QtWebEngineQuick --exclude-module PySide6.QtQuick --exclude-module PySide6.QtQuickWidgets --exclude-module PySide6.QtQml --exclude-module PySide6.QtPdf --exclude-module PySide6.QtPdfWidgets --exclude-module PySide6.Qt3DCore --exclude-module PySide6.QtCharts --exclude-module PySide6.QtDesigner --exclude-module PySide6.QtSql --exclude-module PySide6.QtTest
+          - variant: daydu
+            suffix: _DayDu
+            excludes: --exclude-module numpy --exclude-module yaml --exclude-module tkinter --exclude-module PySide6.QtPdf --exclude-module PySide6.QtPdfWidgets --exclude-module PySide6.Qt3DCore --exclude-module PySide6.QtCharts --exclude-module PySide6.QtDesigner --exclude-module PySide6.QtSql --exclude-module PySide6.QtTest
     steps:
       - uses: actions/checkout@v4
 
@@ -14,26 +24,38 @@ jobs:
         with:
           python-version: "3.11"
 
-           - name: Cài thư viện
+      - name: Cài thư viện
         run: pip install -r requirements.txt pytest pyinstaller lupa pillow
 
       - name: Chạy kiểm tra tự động
+        if: matrix.variant == 'daydu'
         env:
           QT_QPA_PLATFORM: offscreen
           MM_NO_WEBENGINE: "1"
         run: python -m pytest -q -p no:cacheprovider
 
       - name: Đóng gói ứng dụng
-        run: pyinstaller --noconfirm --windowed --name ManageMoho --icon assets/logo.ico --add-data "assets;assets" main.py
+        run: pyinstaller --noconfirm --windowed --name ManageMoho --icon assets/logo.ico --add-data "assets;assets" ${{ matrix.excludes }} main.py
+
+      - name: Dọn các phần không dùng (giảm dung lượng, không mất chức năng)
+        shell: pwsh
+        run: |
+          $before = (Get-ChildItem dist/ManageMoho -Recurse -File | Measure-Object Length -Sum).Sum / 1MB
+          Get-ChildItem dist/ManageMoho -Recurse -Directory -Filter translations | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+          foreach ($n in "Qt6Pdf.dll","qpdf.dll","Qt6VirtualKeyboard.dll","qtvirtualkeyboardplugin.dll") {
+            Get-ChildItem dist/ManageMoho -Recurse -File -Filter $n | Remove-Item -Force -ErrorAction SilentlyContinue
+          }
+          $after = (Get-ChildItem dist/ManageMoho -Recurse -File | Measure-Object Length -Sum).Sum / 1MB
+          "Dung lượng cài đặt: {0:N0} MB -> {1:N0} MB" -f $before, $after
 
       - name: Cài Inno Setup
         run: choco install innosetup -y --no-progress
 
       - name: Tạo bộ cài Setup.exe
-        run: '& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss'
+        run: '& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" /DSuffix=${{ matrix.suffix }} installer.iss'
 
       - name: Lưu bộ cài để tải về
         uses: actions/upload-artifact@v4
         with:
-          name: ManageMoho-Setup
-          path: dist-installer/ManageMoho_Setup.exe
+          name: ManageMoho-Setup${{ matrix.suffix }}
+          path: dist-installer/ManageMoho_Setup${{ matrix.suffix }}.exe
